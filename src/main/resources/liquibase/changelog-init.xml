@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd"
+        logicalFilePath="changelog-init.xml">
+    <changeSet author="marc-andre beaudry" id="create_bookings_table">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="bookings"/>
+            </not>
+        </preConditions>
+        <sql>
+            <![CDATA[
+                CREATE TABLE bookings (
+                    id              varchar(255) PRIMARY KEY,
+                    first_name      varchar(255) NOT NULL,
+                    last_name       varchar(255) NOT NULL,
+                    email           varchar(255) NOT NULL,
+                    date_range      daterange NOT NULL,
+                    version         bigint DEFAULT 0 NOT NULL,
+                    created_on      timestamp NOT NULL,
+                    modified_on     timestamp NOT NULL,
+                    EXCLUDE USING GIST (date_range WITH &&)
+                );
+            ]]>
+        </sql>
+        <rollback>
+            <dropTable tableName="bookings"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog> 
